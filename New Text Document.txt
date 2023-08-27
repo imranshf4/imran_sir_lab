@@ -1,0 +1,579 @@
+Display following image operation in MATLAB/Python - i) Histogram image ii) Low pass filter mage iii) High pass image.
+
+i)%---------------Histogram--------------------
+clc;
+clear all;
+close all;
+% Load an image
+image = imread('fruit-2999796_2.jpg');
+
+% Convert to grayscale if needed
+gray_image = rgb2gray(image);
+
+% Display histogram
+figure;
+imhist(gray_image);
+title('Histogram of the Image');
+
+ii) %---------------Low-Pass Filtered Imag-----------------
+clc;
+clear all;
+close all;
+% Load an image (replace 'fruit-2999796.jpg' with your image's filename)
+image = imread('fruit-2999796.jpg');
+
+% Define a low-pass filter (e.g., Gaussian filter)
+filter_size = 5; % Adjust filter size as needed
+sigma = 1; % Adjust sigma as needed
+filter = fspecial('gaussian', filter_size, sigma);
+
+% Apply the filter to the image
+filtered_image = imfilter(image, filter, 'replicate');
+
+% Display the original image and the filtered image side by side
+subplot(1, 2, 1);
+imshow(image);
+title('Original Image');
+
+subplot(1, 2, 2);
+imshow(filtered_image);
+title('Low-Pass Filtered Image');
+
+iii)%---------------High-Pass Filtered Image-----------------
+
+clc;
+clear all;
+close all;
+% Load an image (replace 'fruit-2999796.jpg' with your image's filename)
+image = imread('fruit-2999796.jpg');
+
+% Define a high-pass filter (e.g., Laplacian filter)
+filter = fspecial('laplacian', 0.2);
+
+% Apply the filter to the image
+filtered_image = imfilter(image, filter, 'replicate');
+
+% Display the original image and the high-pass filtered image side by side
+subplot(1, 2, 1);
+imshow(image);
+title('Original Image');
+
+subplot(1, 2, 2);
+imshow(filtered_image + 0.5); % Adding 0.5 for visualization
+title('High-Pass Filtered Image');
+
+#2.-Write a MATLAB/Python program to read rice.tif image, count number of rice and 
+%display area (also specific range), major axis length, and perimeter
+
+clc;
+clear all;
+close all;
+% Read the image
+image = imread('rice.png');
+
+% Convert the image to binary using thresholding
+threshold = graythresh(image);
+binaryImage = imbinarize(image, threshold);
+
+% Label connected components
+labeledImage = bwlabel(binaryImage);
+
+% Measure properties of rice grains
+properties = regionprops(labeledImage, 'Area', 'MajorAxisLength', 'Perimeter');
+
+% Filter rice grains based on specific area range
+minArea = 100;
+maxArea = 1500;
+filteredProperties = properties([properties.Area] >= minArea & [properties.Area] <= maxArea);
+
+% Display results
+fprintf('Total number of rice grains: %d\n', numel(filteredProperties));
+for i = 1:numel(filteredProperties)
+    fprintf('Rice grain %d:\n', i);
+    fprintf('   Area: %.2f pixels\n', filteredProperties(i).Area);
+    fprintf('   Major Axis Length: %.2f pixels\n', filteredProperties(i).MajorAxisLength);
+    fprintf('   Perimeter: %.2f pixels\n', filteredProperties(i).Perimeter);
+end
+
+% Display the labeled image
+imshow(label2rgb(labeledImage));
+title('Labeled Rice Grains');
+
+
+
+3. write a MATLAB/Python program to read an image and perform convolution 
+with 3X3 mask.
+clc;
+clear all;
+close all;
+% Load the image
+image = imread('fruit-2999796_1.jpg');
+image = rgb2gray(image); % Convert to grayscale if needed
+
+% Define the 3x3 mask
+mask = [1, 0, -1; 2, 0, -2; 1, 0, -1];
+
+% Perform convolution using built-in function
+convolved_image = conv2(double(image), mask, 'same');
+
+% Display the original and convolved images
+subplot(1, 2, 1), 
+imshow(image),
+ title('Original Image');
+subplot(1, 2, 2),
+ imshow(convolved_image, []),
+ title('Convolved Image');
+
+
+4.write a MATLAB/Python program to read an image and perform Lapliciant 
+filter mask.
+
+clc;
+clear all;
+close all;
+% Load the image
+image = imread('fruit-2999796_1.jpg');
+image = rgb2gray(image); % Convert to grayscale if needed
+
+% Define the Laplacian filter mask
+laplacian_mask = [0, 1, 0; 1, -4, 1; 0, 1, 0];
+
+% Apply convolution using built-in function
+filtered_image = conv2(double(image),
+ laplacian_mask, 'same');
+
+% Display the original and filtered images
+subplot(1, 2, 1), 
+imshow(image), 
+title('Original Image');
+subplot(1, 2, 2),
+ imshow(filtered_image, []), 
+title('Filtered Image (Laplacian)');
+
+
+5..write a MATLAB/Python program to identify horizontal, vertical lines from an 
+image
+
+clc;
+clear all;
+close all;
+% Load the image
+image = imread('fruit-2999796_1.jpg');
+gray_image = rgb2gray(image);
+
+% Apply edge detection using the Sobel operator
+edge_horizontal = edge(gray_image, 'Sobel', 'horizontal');
+edge_vertical = edge(gray_image, 'Sobel', 'vertical');
+
+% Display the original image and detected edges
+subplot(1, 3, 1), imshow(image), title('Original Image');
+subplot(1, 3, 2), imshow(edge_horizontal), title('Horizontal Edges');
+subplot(1, 3, 3), imshow(edge_vertical), title('Vertical Edges');
+
+6.write a MATLAB/Python program to Character Segment of an image.
+
+clc;
+clear all;
+close all;
+% Load the image
+image = imread('Untitled2_2.jpeg');
+gray_image = rgb2gray(image);
+
+% Apply binary thresholding to segment characters
+threshold = graythresh(gray_image);
+binary_image = imbinarize(gray_image, threshold);
+
+% Perform connected component analysis
+cc = bwconncomp(binary_image);
+num_objects = cc.NumObjects;
+labeled_image = labelmatrix(cc);
+
+% Display original image, binary thresholded image, and labeled image
+subplot(1, 3, 1), imshow(image), title('Original Image');
+subplot(1, 3, 2), imshow(binary_image), title('Binary Thresholded Image');
+subplot(1, 3, 3), imshow(label2rgb(labeled_image)), title('Segmented Characters');
+
+
+7..
+% For the given image perform edge detection using different operators and compare the 
+%results.
+
+% Read the image
+image = imread('LINE4_1.JPG'); % Change to your image filename
+
+% Convert the image to grayscale if it's in color
+if size(image, 3) == 3
+    grayImage = rgb2gray(image);
+else
+    grayImage = image;
+end
+
+% Apply edge detection using different operators
+sobelEdges = edge(grayImage, 'sobel');
+prewittEdges = edge(grayImage, 'prewitt');
+robertsEdges = edge(grayImage, 'roberts');
+cannyEdges = edge(grayImage, 'canny');
+
+% Display the original image and the edge detection results side by side
+subplot(2, 2, 1);
+imshow(grayImage);
+title('Original Image');
+
+subplot(2, 2, 2);
+imshow(sobelEdges);
+title('Sobel Edge Detection');
+
+subplot(2, 2, 3);
+imshow(prewittEdges);
+title('Prewitt Edge Detection');
+
+subplot(2, 2, 4);
+imshow(robertsEdges);
+title('Roberts Edge Detection');
+
+figure;
+
+subplot(1, 2, 1);
+imshow(grayImage);
+title('Original Image');
+
+subplot(1, 2, 2);
+imshow(cannyEdges);
+title('Canny Edge Detection');
+
+colormap gray;
+
+8.
+%Write a MATLAB/Python program to read coins.png, leveling all coins and display area 
+%of all coins.
+
+% Read the image
+clc;
+close all;
+clear all;
+
+image = imread('2.png');
+
+% Apply Otsu's thresholding to segment the coins
+threshold = graythresh(image);
+binaryImage = imbinarize(image, threshold);
+
+% Label connected components
+labeledImage = bwlabel(binaryImage);
+
+% Measure properties of coins
+properties = regionprops(labeledImage, 'Area');
+
+% Display results
+fprintf('Total number of coins: %d\n', numel(properties));
+for i = 1:numel(properties)
+    fprintf('Coin %d:\n', i);
+    fprintf('   Area: %.2f pixels\n', properties(i).Area);
+end
+
+% Display the labeled image
+imshow(label2rgb(labeledImage));
+title('Segmented Coins');
+
+#9.. display following image operation in MATLAB/Python - i) Threshold image 
+ii) Power enhance contract image iii) High pass image.
+
+clc;
+clear all;
+close all;
+% Read the image
+originalImage = imread('fruit-2999796_1.jpg'); % Replace with your image filename
+
+% Convert to grayscale if necessary
+if size(originalImage, 3) == 3
+    grayImage = rgb2gray(originalImage);
+else
+    grayImage = originalImage;
+end
+
+% i) Threshold image
+thresholdValue = 128;
+thresholded = grayImage > thresholdValue;
+
+% ii) Power enhance contrast image
+gamma = 1.5;
+enhancedImage = imadjust(grayImage, [], [], gamma);
+
+% iii) High pass image
+filterSize = 3;
+highPass = grayImage - imgaussfilt(grayImage, filterSize);
+
+% Display the images
+subplot(2, 2, 1), imshow(originalImage), title('Original Image');
+subplot(2, 2, 2), imshow(thresholded), title('Thresholded Image');
+subplot(2, 2, 3), imshow(enhancedImage), title('Enhanced Contrast Image');
+subplot(2, 2, 4), imshow(highPass), title('High Pass Image');
+
+
+10..perform image enhancement, smoothing and sharpening, in spatial domain 
+using different spatial filters and compare the performances 
+
+clc;
+clear all;
+close all;
+% Load the image
+image = imread('Untitled2_2.jpeg');
+gray_image = rgb2gray(image);
+
+% Image Enhancement: Histogram Equalization
+enhanced_image = histeq(gray_image);
+
+% Smoothing: Gaussian Blur
+smoothed_image = imgaussfilt(enhanced_image, 2);
+
+% Sharpening: Unsharp Masking
+sharpened_image = imsharpen(smoothed_image, 'Amount', 1.5);
+
+% Display images
+subplot(1, 4, 1), imshow(gray_image), title('Original Image');
+subplot(1, 4, 2), imshow(enhanced_image), title('Enhanced Image');
+subplot(1, 4, 3), imshow(smoothed_image), title('Smoothed Image');
+subplot(1, 4, 4), imshow(sharpened_image), title('Sharpened Image');
+
+
+11.##Perform image enhancement, smoothing and sharpening, in frequency domain using different filters and compare the performances. 
+clc;
+clear all;
+close all;
+
+% Load the input image
+input_image = imread('Untitled2.jpeg');
+input_image = rgb2gray(input_image);
+
+% Display the original image
+subplot(2, 3, 1);
+imshow(input_image);
+title('Original Image');
+
+% Perform Fourier Transform
+fft_image = fftshift(fft2(double(input_image)));
+
+% Create Gaussian filter for smoothing
+[M, N] = size(input_image);
+sigma = 30;
+gaussian_filter = fspecial('gaussian', [M, N], sigma);
+
+% Apply Gaussian smoothing in frequency domain
+smoothed_fft = fft_image .* fft2(gaussian_filter);
+
+% Perform inverse Fourier Transform to get the smoothed image
+smoothed_image = abs(ifft2(ifftshift(smoothed_fft)));
+
+% Display the smoothed image
+subplot(2, 3, 2);
+imshow(uint8(smoothed_image));
+title('Smoothed Image');
+
+% Create Laplacian filter for sharpening
+laplacian_filter = [0 -1 0; -1 4 -1; 0 -1 0];
+
+% Apply Laplacian sharpening in frequency domain
+sharpened_fft = fft_image .* fft2(laplacian_filter, M, N);
+
+% Perform inverse Fourier Transform to get the sharpened image
+sharpened_image = abs(ifft2(ifftshift(sharpened_fft)));
+
+% Display the sharpened image
+subplot(2, 3, 3);
+imshow(uint8(sharpened_image));
+title('Sharpened Image');
+
+% Create high-pass filter for edge enhancement
+high_pass_filter = zeros(M, N);
+cutoff_frequency = 0.1;
+center = [M / 2, N / 2];
+for i = 1:M
+    for j = 1:N
+        distance = sqrt((i - center(1))^2 + (j - center(2))^2);
+        high_pass_filter(i, j) = 1 - exp(-(distance^2) / (2 * (cutoff_frequency * max(M, N))^2));
+    end
+end
+
+% Apply high-pass edge enhancement in frequency domain
+enhanced_fft = fft_image .* fft2(high_pass_filter);
+
+% Perform inverse Fourier Transform to get the enhanced image
+enhanced_image = abs(ifft2(ifftshift(enhanced_fft)));
+
+% Display the enhanced image
+subplot(2, 3, 4);
+imshow(uint8(enhanced_image));
+title('Enhanced Image');
+
+% Display frequency domain representation of the original image
+subplot(2, 3, 5);
+imshow(log(1 + abs(fftshift(fft_image))), []);
+title('Frequency Domain');
+
+% Display frequency domain representation of the filtered image
+subplot(2, 3, 6);
+imshow(log(1 + abs(fftshift(smoothed_fft))), []);
+title('Frequency Domain (Smoothed)');
+
+% Adjust subplot layout
+sgtitle('Image Enhancement, Smoothing, and Sharpening in Frequency Domain');
+
+
+12. write a MATLAB/Python program to separation of voiced/un-voiced/silence 
+regions from a speech signal.
+
+clc;
+clear all;
+close all;
+% Read the speech signal (replace 'speech.wav' with your file)
+[speechSignal, Fs] = audioread('mixkit-big-crowd-laughing-460.wav');
+
+% Parameters for analysis
+frameSize = 0.02;   % Frame size in seconds
+overlap = 0.5;      % Overlap ratio
+thresholdEnergy = 0.02;  % Energy threshold for silence detection
+thresholdZCR = 50;       % Zero-crossing rate threshold for voicing detection
+
+frameLength = round(Fs * frameSize);
+overlapLength = round(frameLength * overlap);
+numFrames = floor((length(speechSignal) - overlapLength) / (frameLength - overlapLength));
+
+voicedRegions = zeros(size(speechSignal));
+unvoicedRegions = zeros(size(speechSignal));
+silenceRegions = zeros(size(speechSignal));
+
+for i = 1:numFrames
+    startIdx = (i - 1) * (frameLength - overlapLength) + 1;
+    endIdx = startIdx + frameLength - 1;
+    
+    frame = speechSignal(startIdx:endIdx);
+    
+    energy = sum(frame.^2) / frameLength;
+    zcr = sum(frame(1:end-1) .* frame(2:end) < 0) / frameLength;
+    
+    if energy < thresholdEnergy
+        silenceRegions(startIdx:endIdx) = frame;
+    elseif zcr > thresholdZCR
+        unvoicedRegions(startIdx:endIdx) = frame;
+    else
+        voicedRegions(startIdx:endIdx) = frame;
+    end
+end
+
+% Plot the results
+time = (0:length(speechSignal)-1) / Fs;
+subplot(3,1,1), plot(time, voicedRegions), title('Voiced Regions')
+subplot(3,1,2), plot(time, unvoicedRegions), title('Unvoiced Regions')
+subplot(3,1,3), plot(time, silenceRegions), title('Silence Regions')
+xlabel('Time (s)')
+
+% Play the separated regions
+soundsc(voicedRegions, Fs);
+pause(length(voicedRegions) / Fs);
+soundsc(unvoicedRegions, Fs);
+pause(length(unvoicedRegions) / Fs);
+soundsc(silenceRegions, Fs);
+
+13.Experiment Name: Write a MATLAB/Python program and plot multilevel speech resolution.
+
+clc;
+clear all;
+close all;
+% Read the speech signal (replace 'speech.wav' with your file)
+[speechSignal, Fs] = audioread('New_Real_Conversation_Lessons.mp3');
+
+% Parameters for CWT
+scales = 1:64;  % Scale levels
+waveletName = 'morl';  % Wavelet function (change as needed)
+
+% Perform CWT
+cwtCoeffs = cwt(speechSignal, scales, waveletName);
+
+% Create a time-frequency plot
+time = (0:length(speechSignal)-1) / Fs;
+freq = scal2frq(scales, waveletName, 1/Fs);
+
+figure;
+imagesc(time, freq, abs(cwtCoeffs));
+colormap(jet);
+colorbar;
+set(gca, 'YDir', 'normal');
+xlabel('Time (s)');
+ylabel('Frequency (Hz)');
+title('Continuous Wavelet Transform - Multilevel Speech Resolution');
+
+ 14.Experiment Name: Write a MATLAB/Python program to recognize speech signal.
+
+  clc;
+clear all;
+close all;     
+        
+       
+    % Load the pre-trained model
+load('New_Real_Conversation_Lessons.mp3'); % You need to provide the actual path to your trained model
+
+% Define the class labels
+classLabels = ["_background_noise_", "unknown", "yes", "no", "up", "down", "left", "right", "on", "off", "stop", "go"];
+
+% Load an example speech signal
+audioPath = 'New_Real_Conversation_Lessons.mp3'; % You need to provide the actual path to your audio file
+[audio, fs] = audioread(audioPath);
+
+% Feature extraction
+mfccs = melcepst(audio, fs, 'E0dD'); % Mel-frequency cepstral coefficients
+
+% Resize the feature to match the input shape of the model
+inputSize = size(net.Layers(1).InputSize);
+mfccsResized = imresize(mfccs, inputSize(1:2));
+
+% Perform speech recognition
+predictions = predict(net, mfccsResized);
+[~, predictedClassIndex] = max(predictions);
+
+% Print the recognized class label
+predictedClassLabel = classLabels(predictedClassIndex);
+fprintf('Predicted class: %s\n', predictedClassLabel);
+    
+   15.Write a MATLAB/Python program for text-to-speech conversion and record speech signal.
+
+
+% Text-to-speech conversion
+textToSpeak = 'Hello, welcome to MATLAB text-to-speech example.';
+speechObj = speech2text(textToSpeak);
+play(speechObj);
+
+% Record speech signal
+fs = 44100; % Sampling frequency
+duration = 5; % Recording duration in seconds
+
+recorder = audiorecorder(fs, 16, 1); % 16-bit, mono audio recording
+disp('Start speaking...');
+recordblocking(recorder, duration);
+disp('Recording finished.');
+
+% Get the recorded audio
+recordedAudio = getaudiodata(recorder);
+
+% Save the recorded audio to a WAV file
+outputFilename = 'mixkit-cool-impact-movie-trailer-2909.wav';
+audiowrite(outputFilename, recordedAudio, fs);
+
+% Plot the recorded audio waveform
+time = (0:length(recordedAudio)-1) / fs;
+subplot(2,1,1);
+plot(time, recordedAudio);
+title('Recorded Speech');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+% Play the recorded audio
+sound(recordedAudio, fs);
+
+% Text-to-speech conversion of the recorded audio
+recordedText = 'Here is the recorded speech playback.';
+speechObjRecorded = speech2text(recordedText);
+playblocking(speechObjRecorded);
+     
+
+
+

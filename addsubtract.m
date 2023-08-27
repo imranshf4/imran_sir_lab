@@ -1,0 +1,12 @@
+i=imread('cameraman.tif');
+figure,imshow(i);
+id1=i+100;
+figure,imshow(id1);
+id2=i-100;
+figure,imshow(id2);
+id3=i*0.5;
+figure,imshow(id3);
+id4=i/0.5;
+figure,imshow(id4);
+id5=imcomplement(i);
+figure,imshow(id5);
